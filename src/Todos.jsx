@@ -1,14 +1,26 @@
 import { useState } from "react";
 import { useFetch } from "./useFetch";
+import { useLocalStorage } from "./useLocalStorage";
 
 export default function Todos() {
-  const [inputId, setInputId] = useState("");
-  const [url, setUrl] = useState(null);
+  const [inputId, setInputId] = useLocalStorage("lastTodoId", "");
+
+  const [url, setUrl] = useState(
+    inputId ? `https://dummyjson.com/todos/${inputId}` : null
+  );
+
   const { data: todoData, isLoading, error } = useFetch(url);
+
   function handleSubmit() {
-    if (!inputId) return;
+    if (!inputId || Number(inputId) <= 0) return;
     setUrl(`https://dummyjson.com/todos/${inputId}`);
   }
+
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter") {
+      handleSubmit();
+    }
+  };
 
   return (
     <div>
@@ -17,7 +29,8 @@ export default function Todos() {
         <input
           type="number"
           value={inputId}
-          onChange={(e) => setInputId(e.target.value)}
+          onChange={(e) => setInputId(e.target.value.trim())}
+          onKeyDown={handleKeyDown}
           placeholder="Enter Todo ID"
         />
         <button onClick={handleSubmit}>Submit</button>
@@ -31,7 +44,7 @@ export default function Todos() {
 
         {!isLoading && todoData && (
           <div style={{ border: "1px solid #ddd", padding: "10px" }}>
-            <h3>Todo ID: {todoData.id}</h3>
+            <h3>Todo Number: {todoData.id}</h3>
             <p>{todoData.todo}</p>
             <p>Completed: {todoData.completed ? "Yes" : "No"}</p>
           </div>
