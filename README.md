@@ -1,70 +1,177 @@
-# Getting Started with Create React App
+# React Custom Hooks Demo
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This project is a small React application that demonstrates how to build and use **custom hooks** for common real-world tasks such as:
 
-## Available Scripts
+* Fetching data from an API
+* Accessing the browser's Geolocation API
+* Persisting state in `localStorage`
 
-In the project directory, you can run:
+The code is structured to keep logic reusable, clean, and separated from UI components.
 
-### `npm start`
+---
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+## Project Structure
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+```
+src/
+│
+├── App.js
+├── Todos.js
+├── Position.js
+│
+├── useFetch.js
+├── useGeolocation.js
+├── useLocalStorage.js
+│
+└── App.css
+```
 
-### `npm test`
+---
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## App Component
 
-### `npm run build`
+`App.js` is the root component of the application.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+* It renders the main UI
+* It currently displays the `Todos` component
+* The `Position` component is available but commented out
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+```jsx
+function App() {
+  return (
+    <div className="App">
+      {/* <Position /> */}
+      <Todos />
+    </div>
+  );
+}
+```
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+---
 
-### `npm run eject`
+## Position Component
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+`Position.js` uses the custom `useGeolocation` hook to access the user's GPS location.
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+### Features
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+* Requests the user's current location
+* Shows loading and error states
+* Displays latitude and longitude
+* Provides a direct link to OpenStreetMap
+* Tracks how many times the location was requested
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+---
 
-## Learn More
+## useGeolocation Hook
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+`useGeolocation.js` is a custom hook that wraps the browser's **Geolocation API**.
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+### Responsibilities
 
-### Code Splitting
+* Handle loading state
+* Handle errors
+* Store latitude and longitude
+* Count how many times the user requested the position
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+### Returned Values
 
-### Analyzing the Bundle Size
+```js
+{
+  lat,
+  lng,
+  isLoading,
+  error,
+  countClicks,
+  getPosition
+}
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+---
 
-### Making a Progressive Web App
+## useFetch Hook
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+`useFetch.js` is a reusable hook for fetching data from an API.
 
-### Advanced Configuration
+### Features
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+* Accepts a URL as input
+* Handles loading and error states
+* Uses `AbortController` to cancel requests on cleanup
+* Prevents state updates on unmounted components
 
-### Deployment
+### Returned Values
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+```js
+{
+  data,
+  isLoading,
+  error
+}
+```
 
-### `npm run build` fails to minify
+---
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+## useLocalStorage Hook
+
+`useLocalStorage.js` synchronizes React state with the browser's `localStorage`.
+
+### Features
+
+* Reads the initial value from `localStorage`
+* Persists updates automatically
+* Works like `useState`
+
+### Usage Example
+
+```js
+const [value, setValue] = useLocalStorage("key", "initialValue");
+```
+
+---
+
+## Why Custom Hooks?
+
+Custom hooks allow you to:
+
+* Reuse logic across components
+* Keep components clean and focused on UI
+* Encapsulate side effects and browser APIs
+* Improve readability and maintainability
+
+---
+
+## Technologies Used
+
+* React (Hooks API)
+* JavaScript (ES6+)
+* Browser APIs (Fetch, Geolocation, localStorage)
+
+---
+
+## How to Run the Project
+
+1. Install dependencies
+
+   ```bash
+   npm install
+   ```
+
+2. Start the development server
+
+   ```bash
+   npm start
+   ```
+
+---
+
+## Notes
+
+* Geolocation requires user permission in the browser
+* Some features may not work in insecure (HTTP) environments
+
+---
+
+## Author
+
+This project is built as a learning example to practice **React Custom Hooks** and clean architecture principles.
