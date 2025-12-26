@@ -170,8 +170,4 @@ Custom hooks allow you to:
 * Geolocation requires user permission in the browser
 * Some features may not work in insecure (HTTP) environments
 
----
 
-## Author
-
-This project is built as a learning example to practice **React Custom Hooks** and clean architecture principles.
